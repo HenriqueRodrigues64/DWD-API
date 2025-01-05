@@ -4,7 +4,7 @@ const session = require('express-session');
 const port = 3000;
 const appScrpts = require('./API/AppScripts')
 const pool  = require('./database');
-connection.connect((err) => {
+pool.connect((err) => {
     if (err){
         console.log("Error connection to DB: " + err);
         return;
