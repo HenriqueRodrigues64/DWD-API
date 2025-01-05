@@ -229,7 +229,7 @@ router.post("/LevelCompleted",(req,res)=>{
                                         res.status(400).send({"log": "Error: "+ err});
                                         return
                                     }else{
-                                        
+                                        console.log("part added")                       
                                     }
                                 }
                                 )
