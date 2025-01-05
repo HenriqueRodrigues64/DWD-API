@@ -229,15 +229,15 @@ router.post("/LevelCompleted",(req,res)=>{
                                         res.status(400).send({"log": "Error: "+ err});
                                         return
                                     }else{
-                                        
+                                        res.status(200).send({"log": "Part Obtained",})
+                                        return;
                                     }
                                 }
                                 )
                             }
                         })
                 }
-                res.status(200).send({"log": "Part Obtained",})
-                return;
+
             }else{
                 console.log("ComputerID already exist")
                 res.status(500).send({
