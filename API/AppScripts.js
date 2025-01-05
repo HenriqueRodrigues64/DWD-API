@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router();
-const pool = require('../database')
+const pool  = require('../database')
 
 router.get("/GetParts/:ComputerID/minigame/:minigameID" ,(req,res)=>{
     var computerID = req.params.ComputerID;
     var minigameID = req.params.minigameID;
-    connection.execute("select * from players where UserID = ?",
+    pool.execute("select * from players where UserID = ?",
         [computerID],
         function(err,results,fields){
             if (err){
@@ -16,7 +16,7 @@ router.get("/GetParts/:ComputerID/minigame/:minigameID" ,(req,res)=>{
                 return
             }else if (results.length > 0){
                 var playerID = results.UserID
-                connection.execute('select parts.ID from player_part_collected INNER JOIN parts on player_part_collected.part_ID where player_ID = ? and parts.minigameID = ?',
+                pool.execute('select parts.ID from player_part_collected INNER JOIN parts on player_part_collected.part_ID where player_ID = ? and parts.minigameID = ?',
                     [playerID,minigameID],
                     function(err,results,fields){
                         if (err){
@@ -51,7 +51,7 @@ router.get("/GetParts/:ComputerID/minigame/:minigameID" ,(req,res)=>{
 })
 router.post("/CheckComputer" ,(req,res)=>{
     var computerID = req.body.ComputerID;
-    connection.execute("select * from players where UserID = ?",
+    pool.execute("select * from players where UserID = ?",
         [computerID],
         function(err,results,fields){
             if (err){
@@ -80,7 +80,7 @@ router.post("/CheckComputer" ,(req,res)=>{
 router.get("/CheckMinigame/:computerID/minigame/:minigameID" ,(req,res)=>{
     var computerID = req.params.computerID;
     var minigameID = req.params.minigameID;
-    connection.execute("select * from players where UserID = ?",
+    pool.execute("select * from players where UserID = ?",
         [computerID],
         function(err,results,fields){
             if (err){
@@ -91,7 +91,7 @@ router.get("/CheckMinigame/:computerID/minigame/:minigameID" ,(req,res)=>{
                 return
             }else if (results.length > 0){
                 var playerID = results.length;
-                connection.execute('select * from player_minigame_completed where player_ID = ? and minigame_ID = ?',
+                pool.execute('select * from player_minigame_completed where player_ID = ? and minigame_ID = ?',
                     [playerID,minigameID],
                     function(err,results,fields){
                         if (err){
@@ -135,7 +135,7 @@ router.post("/CheckingComputerID",(req,res)=>{
         return;
     }
     function CheckIfAccountExists(){
-        connection.execute("select * from players where UserID = ?",
+        pool.execute("select * from players where UserID = ?",
         [computerID],
         function(err,results,fields){
             if (err){
@@ -160,7 +160,7 @@ router.post("/CheckingComputerID",(req,res)=>{
         })
     }
     function CreateAccount(){
-        connection.execute('INSERT INTO players (UserID) VALUES (?)',
+        pool.execute('INSERT INTO players (UserID) VALUES (?)',
         [computerID],
         function(err,results,fields){
             if (err) {
@@ -193,7 +193,7 @@ router.post("/LevelCompleted",(req,res)=>{
         });
         return;
     }
-    connection.execute("select * from players where UserID = ?",
+    pool.execute("select * from players where UserID = ?",
         [computerID],
         function(err,results,fields){
             if (err){
@@ -205,7 +205,7 @@ router.post("/LevelCompleted",(req,res)=>{
             }else if (results.length > 0){
                 var playerID = results.length;
                 for (let i = 0; i < parts.array.length; i++) {
-                    connection.execute("select * from player_part_collected where player_ID = ? And part_ID = ?",
+                    pool.execute("select * from player_part_collected where player_ID = ? And part_ID = ?",
                         [playerID,parts.array[i]],
                         function(err1,results,fields){
                             if (err1){
@@ -222,7 +222,7 @@ router.post("/LevelCompleted",(req,res)=>{
                                 });
                                 return;
                             }else{
-                                connection.execute('INSERT INTO player_part_collected (player_ID,part_ID) VALUES (?,?)',
+                                pool.execute('INSERT INTO player_part_collected (player_ID,part_ID) VALUES (?,?)',
                                 [playerID,parts.array[i]],
                                 function (err, results, fields) {
                                     if (err){
@@ -258,7 +258,7 @@ router.post("/MinigameFinish",(req,res)=>{
         });
         return;
     }
-    connection.execute("select * from player_minigame_completed where player_ID = ? And minigame_ID = ?",
+    pool.execute("select * from player_minigame_completed where player_ID = ? And minigame_ID = ?",
         [playerID,mGame],
         function(err1,results,fields){
             if (err1){
@@ -275,7 +275,7 @@ router.post("/MinigameFinish",(req,res)=>{
                 });
                 return;
             }else{
-                connection.execute('INSERT INTO player_minigame_completed (player_ID,minigame_ID) VALUES (?,?)',
+                pool.execute('INSERT INTO player_minigame_completed (player_ID,minigame_ID) VALUES (?,?)',
                 [playerID,mGame],
                 function (err, results, fields) {
                     if (err){
