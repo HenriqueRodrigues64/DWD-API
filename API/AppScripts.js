@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const connection = require('../database')
+const pool = require('../database')
 
 router.get("/GetParts/:ComputerID/minigame/:minigameID" ,(req,res)=>{
     var computerID = req.params.ComputerID;
